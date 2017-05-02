@@ -10,7 +10,7 @@
        	  dirFile.mkdir();    
     	 }    
      	File myCaptureFile = new File(path + fileName);    
-    	 BufferedOutputStream bos = new BufferedOutputStream(new  		FileOutputStream(myCaptureFile));    
+    	BufferedOutputStream bos = new BufferedOutputStream(new  		FileOutputStream(myCaptureFile));    
      	bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);    
      	bos.flush();    
     	bos.close();    
