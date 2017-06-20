@@ -147,21 +147,21 @@
    
   9. 设置hint大小
   
-    	public static SpannableString setHintSize(String hint, int size) {
-        SpannableString ss = new SpannableString(hint);
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
-        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        SpannableString spannableString = new SpannableString(ss);
-        return spannableString;
-    	}
+    		public static SpannableString setHintSize(String hint, int size) 	{
+        	SpannableString ss = new SpannableString(hint);
+        	AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
+        	ss.setSpan(ass, 0, ss.length(), 	Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        	SpannableString spannableString = new SpannableString(ss);
+        	return spannableString;
+    		}
   		
 
     
  10. 将时间戳转为代表"距现在多久之前"的字符串
  
  	
-    	public static String getStandardDate(String timeStr) {
-        String ts = getTime(timeStr);
+    		public static String getStandardDate(String timeStr) {
+        	String ts = getTime(timeStr);
         StringBuffer sb = new StringBuffer();
         long t = Long.parseLong(ts);
         long time = System.currentTimeMillis() - (t * 1000);
@@ -219,9 +219,9 @@
         return re_time;
     	}
 
-    	public static String getBetweenTime(String nowTime,String afterTime) {
+    	public static String getBetweenTime(String nowTime,String afterTime) 			{
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       	 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try {
             Date d1 = df.parse(nowTime);
@@ -264,19 +264,19 @@
     
  11. 验证身份证号
     
-    	public static boolean isIDCardNumberValid(String id_card) {
-       	boolean isValid = false;
-        String expression = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$";
-        CharSequence inputStr = id_card;
-        Pattern pattern = Pattern.compile(expression);
-        Matcher matcher = pattern.matcher(inputStr);
-        if (matcher.matches()) {
-            isValid = true;
-        }
-        return isValid;
-    	}
+    		public static boolean isIDCardNumberValid(String id_card) {
+       		boolean isValid = false;
+        	String expression = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))		(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$";
+        	CharSequence inputStr = id_card;
+        	Pattern pattern = Pattern.compile(expression);
+       	 Matcher matcher = pattern.matcher(inputStr);
+       	 if (matcher.matches()) {
+       	     isValid = true;
+        	}
+        	return isValid;
+    		}
 
-    	public static String getJson(Context context, int path) {
+    		public static String getJson(Context context, int path) {
         String json = "";
         InputStream is = context.getResources().openRawResource(
                 path);
@@ -289,7 +289,7 @@
             e.printStackTrace();
         }
         return json;
-   	 	}
+   	 		}
 
    
 12. 比较两个时间大小
