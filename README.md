@@ -147,13 +147,13 @@
    
   9. 设置hint大小
   
-  		public static SpannableString setHintSize(String hint, int size) {
-        SpannableString ss = new SpannableString(hint);
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
-        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        SpannableString spannableString = new SpannableString(ss);
-        return spannableString;
-    	}
+  			public static SpannableString setHintSize(String hint, int size) 	{
+        	SpannableString ss = new SpannableString(hint);
+        	AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
+        	ss.setSpan(ass, 0, ss.length(), 					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        	SpannableString spannableString = new SpannableString(ss);
+        	return spannableString;
+    		}	
 
     
  10. 将时间戳转为代表"距现在多久之前"的字符串
@@ -199,9 +199,9 @@
             sb.append("前");
         	}
         	return sb.toString();
-    	}
+    		}
 
-    public static String getTime(String user_time) {
+    	public static String getTime(String user_time) {
         String re_time = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date d;
@@ -216,9 +216,9 @@
             e.printStackTrace();
         }
         return re_time;
-    }
+    	}
 
-    public static String getBetweenTime(String nowTime,String afterTime) {
+    	public static String getBetweenTime(String nowTime,String afterTime) {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
