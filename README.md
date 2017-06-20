@@ -81,7 +81,7 @@
         
 6. 验证用户名
    
-   		 public static boolean isUserNameValid1(String userName) {
+   		public static boolean isUserNameValid1(String userName) {
         boolean isValid = false;
         String expression1 = "^[a-zA-Z0-9]{4,16}";
         CharSequence inpustr = userName;
@@ -107,16 +107,16 @@
 7. 验证密码
        
        public static boolean isPasswordValid(String passwrod) {
-        boolean isValid = false;
-        String expression2 = "^[A-Za-z0-9\\_]{6,16}$";
-        CharSequence inpustr = passwrod;
-        Pattern pattern = Pattern.compile(expression2);
-        Matcher matcher = pattern.matcher(inpustr);
-        if (matcher.matches()) {
+       boolean isValid = false;
+       String expression2 = "^[A-Za-z0-9\\_]{6,16}$";
+       CharSequence inpustr = passwrod;
+       Pattern pattern = Pattern.compile(expression2);
+       Matcher matcher = pattern.matcher(inpustr);
+       if (matcher.matches()) {
             isValid = true;
-        }
-        return isValid;
-       	}
+       }
+       return isValid;
+       }
     			
 
     
@@ -146,18 +146,20 @@
 
    
   9. 设置hint大小
-    
-  		  public static SpannableString setHintSize(String hint, int size) {
+  
+    	public static SpannableString setHintSize(String hint, int size) {
         SpannableString ss = new SpannableString(hint);
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         SpannableString spannableString = new SpannableString(ss);
         return spannableString;
     	}
+  		
 
     
  10. 将时间戳转为代表"距现在多久之前"的字符串
-    
+ 
+ 	
     	public static String getStandardDate(String timeStr) {
         String ts = getTime(timeStr);
         StringBuffer sb = new StringBuffer();
@@ -257,7 +259,10 @@
 
     	}
 
-  11. 验证身份证号
+ 
+ 	
+    
+ 11. 验证身份证号
     
     	public static boolean isIDCardNumberValid(String id_card) {
        	boolean isValid = false;
