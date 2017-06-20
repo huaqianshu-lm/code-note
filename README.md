@@ -150,7 +150,7 @@
   			public static SpannableString setHintSize(String hint, int size) 	{
         	SpannableString ss = new SpannableString(hint);
         	AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
-        	ss.setSpan(ass, 0, ss.length(), 					Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        	ss.setSpan(ass, 0, ss.length(), 			Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         	SpannableString spannableString = new SpannableString(ss);
         	return spannableString;
     		}	
@@ -201,28 +201,28 @@
         	return sb.toString();
     		}
 
-    	public static String getTime(String user_time) {
-        String re_time = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date d;
-        try {
-            d = sdf.parse(user_time);
-            long l = d.getTime();
-            String str = String.valueOf(l);
-            re_time = str.substring(0, 10);
+    		public static String getTime(String user_time) {
+        	String re_time = null;
+        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	Date d;
+        	try {
+            	d = sdf.parse(user_time);
+            	long l = d.getTime();
+            	String str = String.valueOf(l);
+            	re_time = str.substring(0, 10);
 
-        } catch (ParseException e) {
+        	} catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }
-        return re_time;
-    	}
+        	}
+        	return re_time;
+    		}
 
-    	public static String getBetweenTime(String nowTime,String afterTime) {
+    		public static String getBetweenTime(String nowTime,String afterTime) {
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-        try {
+        	try {
             Date d1 = df.parse(nowTime);
             Date d2 = df.parse(afterTime);
             long diff = d1.getTime() - d2.getTime();// 这样得到的差值是微秒级别
