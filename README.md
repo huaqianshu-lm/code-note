@@ -252,11 +252,11 @@
 
             }
             return buffer.toString();
-        } catch (Exception e) {
+       	 } catch (Exception e) {
             return afterTime;
         }
 
-    }    
+   		 }    
  11. 验证身份证号
  
  			public static boolean isIDCardNumberValid(String id_card) {
