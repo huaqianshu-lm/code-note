@@ -153,52 +153,53 @@
         ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         SpannableString spannableString = new SpannableString(ss);
         return spannableString;
-    }
+    	}
 
     
  10. 将时间戳转为代表"距现在多久之前"的字符串
  		
- 		public static String getStandardDate(String timeStr) {
-        String ts = getTime(timeStr);
-        StringBuffer sb = new StringBuffer();
-        long t = Long.parseLong(ts);
-        long time = System.currentTimeMillis() - (t * 1000);
-        long mill = (long) Math.ceil(time / 1000);// 秒前
+ 		
+ 			public static String getStandardDate(String timeStr) {
+        	String ts = getTime(timeStr);
+        	StringBuffer sb = new StringBuffer();
+        	long t = Long.parseLong(ts);
+        	long time = System.currentTimeMillis() - (t * 1000);
+        	long mill = (long) Math.ceil(time / 1000);// 秒前
 
-        long minute = (long) Math.ceil(time / 60 / 1000.0f);// 分钟前
+        	long minute = (long) Math.ceil(time / 60 / 1000.0f);// 分钟前
 
-        long hour = (long) Math.ceil(time / 60 / 60 / 1000.0f);// 小时
+       	 	long hour = (long) Math.ceil(time / 60 / 60 / 1000.0f);// 小时
 
-        long day = (long) Math.ceil(time / 24 / 60 / 60 / 1000.0f);// 天前
+        	long day = (long) Math.ceil(time / 24 / 60 / 60 / 1000.0f);// 天前
 
-        if (day - 1 > 0) {
-            sb.append(day-1 + "天");
-        } else if (hour - 1 > 0) {
-            if (hour >= 24) {
+        	if (day - 1 > 0) {
+            	sb.append(day-1 + "天");
+        	} else if (hour - 1 > 0) {
+           	 if (hour >= 24) {
                 sb.append("1天");
-            } else {
+            	} else {
                 sb.append(hour + "小时");
-            }
-        } else if (minute - 1 > 0) {
+            	}
+        	} else if (minute - 1 > 0) {
             if (minute == 60) {
                 sb.append("1小时");
             } else {
                 sb.append(minute + "分钟");
             }
-        } else if (mill - 1 > 0) {
+        	} else if (mill - 1 > 0) {
             if (mill == 60) {
                 sb.append("1分钟");
             } else {
                 sb.append(mill + "秒");
             }
-        } else {
+        	} else {
             sb.append("刚刚");
-        }
-        if (!sb.toString().equals("刚刚")) {
+        	}
+        	if (!sb.toString().equals("刚刚")) {
             sb.append("前");
-        }
-        return sb.toString();
-    }
+        	}
+        	return sb.toString();
+    	}
 
     public static String getTime(String user_time) {
         String re_time = null;
@@ -258,18 +259,18 @@
     }    
  11. 验证身份证号
  
- 		public static boolean isIDCardNumberValid(String id_card) {
-        boolean isValid = false;
-        String expression = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$";
-        CharSequence inputStr = id_card;
-        Pattern pattern = Pattern.compile(expression);
-        Matcher matcher = pattern.matcher(inputStr);
-        if (matcher.matches()) {
-            isValid = true;
-        }
-        return isValid;
+ 			public static boolean isIDCardNumberValid(String id_card) {
+       	 	boolean isValid = false;
+        	String expression = "^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))	(([0|1|2]\\d)|3[0-1])\\d{3}([0-9]|X)$";
+        	CharSequence inputStr = id_card;
+        	Pattern pattern = Pattern.compile(expression);
+        	Matcher matcher = pattern.matcher(inputStr);
+        	if (matcher.matches()) {
+            	isValid = true;
+        	}
+        	return isValid;
 
-    	}
+    		}
    
 12. 比较两个时间大小
     
