@@ -138,7 +138,7 @@
 7. 验证密码
   ​     
   ```java
-   public static boolean isPasswordValid(String passwrod) {
+  public static boolean isPasswordValid(String passwrod) {
    boolean isValid = false;
    String expression2 = "^[A-Za-z0-9\\_]{6,16}$";
    CharSequence inpustr = passwrod;
@@ -193,21 +193,21 @@
 
 10. 设置hint大小
 
-    ```java
-    public static SpannableString setHintSize(String hint, int size) 	{
+   ```java
+   public static SpannableString setHintSize(String hint, int size) 	{
 
-     	SpannableString ss = new SpannableString(hint);
+    	SpannableString ss = new SpannableString(hint);
 
-     	AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
+    	AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
 
-     	ss.setSpan(ass, 0, ss.length(), 			Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    	ss.setSpan(ass, 0, ss.length(), 			Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-     	SpannableString spannableString = new SpannableString(ss);
+    	SpannableString spannableString = new SpannableString(ss);
 
-     	return spannableString;
+    	return spannableString;
 
-    }	
-    ```
+   }	
+   ```
 
 11. 将时间戳转为代表"距现在多久之前"的字符串
 
@@ -347,48 +347,45 @@
     }
     ```
 
- undefined比较两个时间大小
+13. 比较两个时间大小
 
-      ```java
-      public static int compare_date(String date1, String date2) {
+    ```java
+    public static int compare_date(String date1, String date2) {
 
-              if (date1 == null || date1.equals(""))
+        if (date1 == null || date1.equals(""))
 
-                  return 0;
+            return 0;
 
-              if (date2 == null || date2.equals(""))
+        if (date2 == null || date2.equals(""))
 
-                  return 0;
+            return 0;
 
-              // 转换为标准时间
+        // 转换为标准时间
 
-              SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
-              Date date = null;
+        Date date = null;
 
-              Date mydate = null;
+        Date mydate = null;
 
-              try {
+        try {
 
-                  date = myFormatter.parse(date1);
-                  mydate = myFormatter.parse(date2);
+            date = myFormatter.parse(date1);
+            mydate = myFormatter.parse(date2);
 
-              } catch (Exception e) {
+        } catch (Exception e) {
 
-              }
+        }
 
-              long day = mydate.getTime() - date.getTime();
+        long day = mydate.getTime() - date.getTime();
 
-              if (day >= 0)
+        if (day >= 0)
 
-                  return 1;
+            return 1;
 
-              else return 0;
-
-
-          }
-      ```
-
+        else return 0;
+    }
+    ```
 
 14. 禁止连续点击
 
