@@ -193,21 +193,21 @@
 
 10. 设置hint大小
 
-   ```java
-   public static SpannableString setHintSize(String hint, int size) 	{
+  ```java
+  public static SpannableString setHintSize(String hint, int size) 	{
 
-    	SpannableString ss = new SpannableString(hint);
+   	SpannableString ss = new SpannableString(hint);
 
-    	AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
+   	AbsoluteSizeSpan ass = new AbsoluteSizeSpan(size, true);
 
-    	ss.setSpan(ass, 0, ss.length(), 			Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+   	ss.setSpan(ass, 0, ss.length(), 			Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-    	SpannableString spannableString = new SpannableString(ss);
+   	SpannableString spannableString = new SpannableString(ss);
 
-    	return spannableString;
+   	return spannableString;
 
-   }	
-   ```
+  }	
+  ```
 
 11. 将时间戳转为代表"距现在多久之前"的字符串
 
@@ -456,6 +456,260 @@
                 toast.setText(content);
             }
             toast.show();
+        }
+    }
+    ```
+
+17. 保存图片
+
+    ```java
+      /***
+         * 保存图片
+         */
+        class SaveImage extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+                String result = "";
+                try {
+                    String sdcard = Environment.getExternalStorageDirectory().toString();
+                    File file = new File(sdcard);
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    String fileName = new Date().getTime() + ".jpg";
+                    file = new File(sdcard + "/" + fileName);
+                    InputStream inputStream = null;
+                    URL url = new URL(params[0]);
+                    Log.e(TAG, "url:" + url);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(20000);
+                    if (conn.getResponseCode() == 200) {
+                        inputStream = conn.getInputStream();
+                    }
+                    byte[] buffer = new byte[4096];
+                    int len = 0;
+                    FileOutputStream outStream = new FileOutputStream(file);
+                    while ((len = inputStream.read(buffer)) != -1) {
+                        outStream.write(buffer, 0, len);
+                    }
+                    outStream.close();
+                    MediaStore.Images.Media.insertImage(getContentResolver(),
+                            file.getAbsolutePath(), fileName, null);
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/");
+    //                Uri uri = Uri.fromFile(file);
+                    intent.setData(uri);
+                    sendBroadcast(intent);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了
+                    result = "图片已保存至：" + file.getAbsolutePath();
+
+                } catch (Exception e) {
+                    result = "保存失败！" + e.getLocalizedMessage();
+                    Log.e(TAG, result);
+                }
+                return result;
+            }
+     
+            @Override
+            protected void onPostExecute(String result) {
+                Toast.makeText(WebActivity.this, result, Toast.LENGTH_SHORT).show();
+            }
+        }
+    ```
+
+18. 截屏生成bitmap
+
+    ```java
+     public Bitmap snapshotView(View view) {
+    //        if (window != null) {
+            //找到当前页面的根布局
+    //            View view = window.getDecorView().getRootView();
+            //获取当前屏幕的大小
+            int width = view.getWidth();
+            int height = view.getHeight();
+     
+            //设置缓存
+            view.setDrawingCacheEnabled(true);
+            view.buildDrawingCache();
+                /*1、从缓存中获取当前屏幕的图片,创建一个DrawingCache的拷贝，因为DrawingCache得到的位图在禁用后会被回收
+                 如果直接是控件调用buildDrawingCache
+                 *是该控件当前显示在屏幕上的部分就不用减去状态栏的高度了
+                 */
+            Bitmap temBitmap = Bitmap.createBitmap(view.getDrawingCache(), 0, 标题栏的高度, width, height - 标题栏的高度);
+            //禁用DrawingCahce否则会影响性能 ,而且不禁止会导致每次截图到保存的是缓存的位图
+            view.destroyDrawingCache();
+            view.setDrawingCacheEnabled(false);
+     
+            return temBitmap;
+    //        }
+    //        return null;
+        }
+    ```
+
+19. 扫描二维码
+
+    ```java
+     private Result getQRcode(Bitmap bitmap) {
+    //        Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+       // 直接从 imageview 控件里取 bitmap
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            int[] data = new int[width * height];
+            bitmap.getPixels(data, 0, width, 0, 0, width, height);
+            RGBLuminanceSource source = new RGBLuminanceSource(width, height, data);
+            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+            QRCodeReader reader = new QRCodeReader();
+            Result result = null;
+            try {
+                result = reader.decode(binaryBitmap);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            } catch (ChecksumException e) {
+                e.printStackTrace();
+            } catch (FormatException e) {
+                e.printStackTrace();
+            }
+     
+    //        dealQRCode(result);
+     
+            return result;// result.getText()获取到扫描结果
+        }
+    ```
+
+20. 用自带 API 获取 location 对象
+
+    ```java
+    /**
+         * 获取 location ，经纬度
+         */
+        public void getLocation() {
+            LocationManager locationManager;
+            //实例化一个LocationManager对象
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            //provider的类型
+            String provider = LocationManager.NETWORK_PROVIDER;
+
+            Criteria criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);   //高精度
+            criteria.setAltitudeRequired(false);    //不要求海拔
+            criteria.setBearingRequired(false); //不要求方位
+            criteria.setCostAllowed(false); //不允许有话费
+            criteria.setPowerRequirement(Criteria.POWER_LOW);   //低功耗
+
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            //通过最后一次的地理位置来获得Location对象
+            android.location.Location location = locationManager.getLastKnownLocation(provider);
+            Log.e("MainActivity", "log" + location);
+            
+            /*
+             * 第二个参数表示更新的周期，单位为毫秒；第三个参数的含义表示最小距离间隔，单位是米
+             * 设定每30秒进行一次自动定位
+             */
+            locationManager.requestLocationUpdates(provider, 30000, 50,
+                    locationListener);
+            //移除监听器，在只有一个widget的时候，这个还是适用的
+            locationManager.removeUpdates(locationListener);
+
+        }
+
+
+        /**
+         * 方位改变时触发，进行调用,在各个方法中执行对应的操作
+         */
+        private final static LocationListener locationListener = new LocationListener() {
+
+            public void onLocationChanged(Location location) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+        };
+
+    ```
+
+21. 根据经纬度获取两点之间的距离
+
+    ```java
+    private static final double EARTH_RADIUS = 6378.137;
+
+        private static double rad(double d) {
+            return d * Math.PI / 180.0;
+        }
+
+        // 返回单位是:千米
+        public static double getDistance(double longitude1, double latitude1,
+                                         double longitude2, double latitude2) {
+            double Lat1 = rad(latitude1);
+            double Lat2 = rad(latitude2);
+            double a = Lat1 - Lat2;
+            double b = rad(longitude1) - rad(longitude2);
+            double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+                    + Math.cos(Lat1) * Math.cos(Lat2)
+                    * Math.pow(Math.sin(b / 2), 2)));
+            s = s * EARTH_RADIUS;
+            //有小数的情况;注意这里的10000d中的“d”
+            s = Math.round(s * 10000d) / 10000d;
+            s = s * 1000;//单位：米
+    //        s = Math.round(s/10d) /100d   ;//单位：千米 保留两位小数
+            s = Math.round(s / 100d) / 10d;//单位：千米 保留一位小数
+            return s;
+        }
+    ```
+
+22. 根据经纬度获取城市名
+
+    ```java
+    private String updateWithNewLocation(Location location) {
+        Geocoder geocoder = new Geocoder(MainActivity.this);//能通过经纬度来获取相应的城市等信息
+        String mcityName = "";
+        double lat = 0;
+        double lng = 0;
+        List<Address> addList = null;
+        if (location != null) {
+            lat = location.getLatitude();
+            lng = location.getLongitude();
+        } else {
+
+            System.out.println("无法获取地理信息");
+        }
+
+        try {
+
+            addList = geocoder.getFromLocation(lat, lng, 1);    //解析经纬度
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (addList != null && addList.size() > 0) {
+            for (int i = 0; i < addList.size(); i++) {
+                Address add = addList.get(i);
+                mcityName += add.getLocality();
+                Log.d("MainActivity", "add:" + add);
+            }
+        }
+        if (mcityName.length() != 0) {
+
+            return mcityName.substring(0, (mcityName.length() - 1));
+        } else {
+            return mcityName;
         }
     }
     ```
