@@ -772,4 +772,241 @@
                 Log.e("mainactivity", "异常e=" + e);
             }
         }
+
     ```
+
+24. 属性动画相关的操作
+
+    ```java
+    private void startAnimator() {
+
+            as = new AnimatorSet();
+      		// 在 xml 文件中配置动画的相关的属性
+            // 透明度
+            ObjectAnimator ob1 = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_alpha);
+            // 旋转
+            ObjectAnimator ob2x = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_rotationx);
+            ObjectAnimator ob2y = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_rotationy);
+            // 缩放
+            ObjectAnimator ob3x = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_scalex);
+            ObjectAnimator ob3y = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_scaley);
+            // 平移
+            ObjectAnimator ob4 = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_translationx);
+            // 颜色变化
+            ObjectAnimator ob5 = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_color);
+
+      // 把动画添加到目标组件中
+            ob1.setTarget(mTextView);
+            ob2x.setTarget(mTextView);
+            ob2y.setTarget(mTextView);
+            ob3x.setTarget(mTextView);
+            ob3y.setTarget(mTextView);
+            ob4.setTarget(mTextView);
+            ob5.setTarget(mTextView);
+    // 把以上的动画添加到一起,同时生效
+            as.playTogether(ob1, ob2x, ob2y, ob3x, ob3y, ob4, ob5);
+      // 开始动画
+            as.start();
+        }
+    ```
+
+    ​	
+
+    ​	xml文件 
+
+    ​
+
+    ```xml
+    <!--透明度-->
+    <objectAnimator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:duration="300"
+
+        android:propertyName="alpha"
+
+        android:repeatCount="100"
+        android:repeatMode="reverse"
+
+        android:valueFrom="0.1f"
+        android:valueTo="1.0f"
+        android:valueType="floatType"
+
+        >
+
+
+    </objectAnimator>
+    ```
+
+    ​	
+
+    ```xml
+    <!--字体颜色-->
+    <objectAnimator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:duration="300"
+
+        android:propertyName="textColor"
+
+        android:repeatCount="0"
+        android:repeatMode="reverse"
+
+        android:valueFrom="#ffff00"
+        android:valueTo="#ffffff"
+        android:valueType="floatType"
+
+    >
+
+
+    </objectAnimator>
+    ```
+
+    ​	
+
+    ```xml
+    <!--旋转-->
+    <objectAnimator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:duration="300"
+
+        android:propertyName="rotationX"
+
+        android:repeatCount="100"
+        android:repeatMode="reverse"
+
+        android:valueFrom="0.0f"
+        android:valueTo="360.0f"
+        android:valueType="floatType"
+
+    >
+
+    ```
+
+    ​	
+
+    ```xml
+    <objectAnimator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:duration="300"
+
+        android:propertyName="rotationY"
+
+        android:repeatCount="100"
+        android:repeatMode="reverse"
+
+        android:valueFrom="0.0f"
+        android:valueTo="360.0f"
+        android:valueType="floatType"
+
+    >
+
+
+    </objectAnimator>
+
+    ```
+
+    ​	
+
+    ```xml
+    <!--缩放-->
+    <objectAnimator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:duration="300"
+
+        android:propertyName="scaleX"
+
+        android:repeatCount="0"
+        android:repeatMode="reverse"
+
+        android:valueFrom="0.1"
+        android:valueTo="1.0"
+        android:valueType="floatType"
+
+    >
+
+
+    </objectAnimator>
+
+    ```
+
+    ​	
+
+    ```xml
+    <!--平移-->
+    <objectAnimator
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:duration="300"
+
+        android:propertyName="translationX"
+
+        android:repeatCount="100"
+        android:repeatMode="reverse"
+
+        android:valueFrom="-70"
+        android:valueTo="60"
+        android:valueType="floatType"
+
+    >
+
+
+    </objectAnimator>
+    ```
+
+    ​	
+
+    ```java
+       private void startAnimator() {
+
+            as = new AnimatorSet();
+         // 平移
+            ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(mTextView,"scaleX",0.1f,1.2f,1.2f);
+            scaleXAnim.setDuration(1500);
+         // 缩放   
+         ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(mTextView,"scaleY",0.1f,1.2f,1.2f);
+            scaleYAnim.setDuration(1500);
+            int colorA = Color.parseColor("#ffffff");
+            int colorC = Color.parseColor("#ffff00");
+         // 颜色   
+         ObjectAnimator colorAnim = ObjectAnimator.ofInt(mTextView, "textColor", colorA, colorC);
+            colorAnim.setDuration(1500);
+            as.playTogether(
+                    scaleXAnim,
+                    scaleYAnim,
+                    colorAnim
+            );
+
+            as.start();
+
+         // 对动画的监听
+            colorAnim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    Toast.makeText(MainActivity.this, "动画已开始", Toast.LENGTH_SHORT).show();
+                    mTextView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+
+        }
+    ```
+
+    ​
