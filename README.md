@@ -44,35 +44,33 @@
 
 3. 遍历 set 的方法 
 
-    迭代遍历：
+    ​
 
-   ```java
-   Set < String > set = new HashSet < String > ();
-   Iterator < String > it = set.iterator();
-   while (it.hasNext()) {
-       String str = it.next();
+    ```java
+    //迭代遍历    
+    Set<String> set = new HashSet<String>();
+    Iterator<String> it = set.iterator();
+    while (it.hasNext()) {
+         String str = it.next();
+         System.out.println(str);
+     }
+    //for 循环遍历：
+    for (String str: set) {
        System.out.println(str);
-   }  
-   ```
-   for 循环遍历：
+    }
 
-   ```java
-   for (String str: set) {  
-     System.out.println(str);
-   }
-   ```
-   当 set 中存放的是 object 的时候：
+    //当 set 中存放的是 object 的时候：
+    Set<Object> set = new HashSet<Object>();
+            for (Object obj : set) {
+                if (obj instanceof Integer) {
+                    int aa = (Integer) obj;
+                } else if (obj instanceof String) {
+                    String aa = (String) obj
+                }
+            }
+            
+    ```
 
-   ```java
-   Set < Object > set = new HashSet < Object > ();
-   for (Object obj: set) {
-       if (obj instanceof Integer) {
-           int aa = (Integer) obj;
-       } else if (obj instanceof String) {
-           String aa = (String) obj
-       }
-
-   ```
 
 
 4. 根据经纬度获取两点之间的距离
@@ -100,12 +98,10 @@
        isValid = true;
    }
    return isValid;
-   ```
    }
+   ```
 
 6. 验证用户名
-
-     ​
 
      ```java
      public static boolean isUserNameValid1(String userName) {
@@ -136,7 +132,7 @@
      ```
 
 7. 验证密码
-  ​     
+  ​  
   ```java
   public static boolean isPasswordValid(String passwrod) {
    boolean isValid = false;
@@ -150,8 +146,6 @@
    return isValid;
    }
   ```
-
-  ​
 
 8. 正则表达式判断邮箱格式是否正确
 
@@ -595,9 +589,7 @@
             criteria.setBearingRequired(false); //不要求方位
             criteria.setCostAllowed(false); //不允许有话费
             criteria.setPowerRequirement(Criteria.POWER_LOW);   //低功耗
-
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+          if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -620,9 +612,9 @@
             //移除监听器，在只有一个widget的时候，这个还是适用的
             locationManager.removeUpdates(locationListener);
 
-        }
-
-
+        } 
+          
+        
         /**
          * 方位改变时触发，进行调用,在各个方法中执行对应的操作
          */
@@ -633,16 +625,16 @@
 
             public void onProviderDisabled(String provider) {
             }
-
-
-            public void onProviderEnabled(String provider) {
+          
+          
+         public void onProviderEnabled(String provider) {
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
             }
-        };
-
+        }; 
     ```
+
 
 21. 根据经纬度获取两点之间的距离
 
@@ -712,4 +704,72 @@
             return mcityName;
         }
     }
+
+    ```
+
+23. 创建文件及读写相关的流程方法
+
+    ```java
+    // 创建文件夹
+    private void createDir() {
+        mulu = new File(this.getFilesDir(), "target");
+    	// 不做这个判断,文件夹可能不会创建
+        if (!mulu.exists()) {
+          // 创建文件夹,也就是文件目录,要与下面创建文件区别开,创建的时候要对应
+            mulu.mkdirs();
+        }
+    }
+    // 创建文件 f1, f2
+    private void initF1F2() {
+            f1 = new File(mulu, "f1.txt");
+            f2 = new File(mulu, "f2.txt");
+            try {
+              // 不做这里的判断,文件可能不会创建
+                if (!f1.exists()) {
+                  // 创建文件,与上面创建文件夹区分开,写的时候注意
+                    f1.createNewFile();
+                }
+                if (!f2.exists()) {
+                    f2.createNewFile();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("mainactivity", "异常e=" + e);
+            }
+        }
+    // 把数据写入 f1 中
+     private void myWriteF1() {
+            FileWriter fw = null;
+            try {
+                if (!f1.exists()) {
+                    f1.createNewFile();
+                }
+                fw = new FileWriter(f1);
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(s1);
+              	// 注意:写完之后要记得关闭,不然数据可能写不到 f1 中
+                bw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("mainactivity", "异常e=" + e);
+            }
+        }
+
+    // 把 f1 中的内容复制到 f2 中,本质上还是流的读写
+    private void copy() {
+            try {
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f1));
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f2));
+                byte[] arr = new byte[1024];
+                int c = 0;
+                while ((c = bis.read(arr)) != -1) {
+                    bos.write(arr, 0, c);
+                }
+                bis.close();
+                bos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("mainactivity", "异常e=" + e);
+            }
+        }
     ```
