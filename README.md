@@ -779,7 +779,7 @@
 
     ```java
     private void startAnimator() {
-
+    
             as = new AnimatorSet();
       		// 在 xml 文件中配置动画的相关的属性
             // 透明度
@@ -794,7 +794,7 @@
             ObjectAnimator ob4 = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_translationx);
             // 颜色变化
             ObjectAnimator ob5 = (ObjectAnimator) AnimatorInflater.loadAnimator(getApplicationContext(), R.animator.home_color);
-
+    
       // 把动画添加到目标组件中
             ob1.setTarget(mTextView);
             ob2x.setTarget(mTextView);
@@ -820,148 +820,149 @@
     <!--透明度-->
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
-
+    
         android:duration="300"
-
+    
         android:propertyName="alpha"
-
+    
         android:repeatCount="100"
         android:repeatMode="reverse"
-
+    
         android:valueFrom="0.1f"
         android:valueTo="1.0f"
         android:valueType="floatType"
-
+    
         >
+    ```
 
 
     </objectAnimator>
     ```
-
+    
     ​	
-
+    
     ```xml
     <!--字体颜色-->
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
-
+    
         android:duration="300"
-
+    
         android:propertyName="textColor"
-
+    
         android:repeatCount="0"
         android:repeatMode="reverse"
-
+    
         android:valueFrom="#ffff00"
         android:valueTo="#ffffff"
         android:valueType="floatType"
-
+    
     >
 
 
     </objectAnimator>
     ```
-
+    
     ​	
-
+    
     ```xml
     <!--旋转-->
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
-
+    
         android:duration="300"
-
+    
         android:propertyName="rotationX"
-
+    
         android:repeatCount="100"
         android:repeatMode="reverse"
-
+    
         android:valueFrom="0.0f"
         android:valueTo="360.0f"
         android:valueType="floatType"
-
+    
     >
-
+    
     ```
-
+    
     ​	
-
+    
     ```xml
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
-
+    
         android:duration="300"
-
+    
         android:propertyName="rotationY"
-
+    
         android:repeatCount="100"
         android:repeatMode="reverse"
-
+    
         android:valueFrom="0.0f"
         android:valueTo="360.0f"
         android:valueType="floatType"
-
+    
     >
 
 
     </objectAnimator>
-
+    
     ```
-
+    
     ​	
-
+    
     ```xml
     <!--缩放-->
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
-
+    
         android:duration="300"
-
+    
         android:propertyName="scaleX"
-
+    
         android:repeatCount="0"
         android:repeatMode="reverse"
-
+    
         android:valueFrom="0.1"
         android:valueTo="1.0"
         android:valueType="floatType"
-
+    
     >
 
 
     </objectAnimator>
-
+    
     ```
-
+    
     ​	
-
+    
     ```xml
     <!--平移-->
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
-
+    
         android:duration="300"
-
+    
         android:propertyName="translationX"
-
+    
         android:repeatCount="100"
         android:repeatMode="reverse"
-
+    
         android:valueFrom="-70"
         android:valueTo="60"
         android:valueType="floatType"
-
+    
     >
 
 
     </objectAnimator>
     ```
-
+    
     ​	
-
+    
     ```java
        private void startAnimator() {
-
+    
             as = new AnimatorSet();
          // 平移
             ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(mTextView,"scaleX",0.1f,1.2f,1.2f);
@@ -979,34 +980,170 @@
                     scaleYAnim,
                     colorAnim
             );
-
+    
             as.start();
-
+    
          // 对动画的监听
             colorAnim.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
-
+    
                 }
-
+    
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     Toast.makeText(MainActivity.this, "动画已开始", Toast.LENGTH_SHORT).show();
                     mTextView.setVisibility(View.GONE);
                 }
-
+    
                 @Override
                 public void onAnimationCancel(Animator animation) {
-
+    
                 }
-
+    
                 @Override
                 public void onAnimationRepeat(Animator animation) {
-
+    
                 }
             });
+    
+        }
+    ```
+    
+    ​
+25. WebView 无法加载证书错误
 
+    sslerror = primary error: 3 certificate: Issued to
+
+    解决方法：调用SslErrorHandler 中的proceed()方法
+
+    ```java
+    @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler,
+                SslError error) {
+            ToastInfo(error.toString());//ssl错误信息
+            handler.proceed();// 进行ssl的认证
+            LogUtil.LogE("MyWebViewClient", "sslerror = "+ error.toString());
+            super.onReceivedSslError(view, handler, error);
         }
     ```
 
-    ​
+26. PopupWindow 显示在控件的不同位置
+
+    ```java
+     int[] location = new int[2];
+            v.getLocationOnScreen(location);
+            mChatPopView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int measuredWidth = mChatPopView.getMeasuredWidth();
+            int measuredHeight = mChatPopView.getMeasuredHeight();
+            //显示在上方
+            chatPop.showAtLocation(v, Gravity.NO_GRAVITY, location[0] + v.getWidth() / 2, location[1] - measuredHeight);
+            //显示在正上方
+    //                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - measuredWidth / 2, location[1] - measuredHeight);
+                    //显示在左方
+    //                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, location[0] - popupWindow.getWidth(), location[1]);
+                    //显示在下方
+    //                popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, location[0] + v.getWidth(), location[1]);
+    //                popupWindow.setAnimationStyle(android.R.style.Animation_Translucent);//设置动画
+    ```
+
+27. 保存图片后强制通知图库刷新
+
+    ```java
+    MediaScannerConnection.scanFile(ResultActiivty.this,
+                        new String[]{file.getAbsolutePath()},
+                        new String[]{"image/jpeg"},
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            @Override
+                            public void onScanCompleted(String path, Uri uri) {
+                                Log.i("result ","onScanCompleted"+path);
+                            }
+                        });
+                        
+                        
+    // 这种方法通知图库更新,有时候对于个别手机会有延时现象
+    
+         MediaStore.Images.Media.insertImage(getContentResolver(),
+                file.getAbsolutePath(), fileName, null);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/"); Uri uri = Uri.fromFile(file);
+        intent.setData(uri);
+        sendBroadcast(intent);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了！，记得要传你更新的file哦
+    ```
+
+28. base 64 字符串转成 bitmap
+
+    ```java
+    public Bitmap stringtoBitmap(String string) {
+        // 将字符串转换成Bitmap类型
+        Bitmap bitmap = null;
+        try {
+            byte[] bitmapArray;
+            bitmapArray = Base64.decode(string, Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0,
+                    bitmapArray.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+    ```
+
+29. 把 bitmap 保存到手机文件中
+
+    ```java
+    public static void saveImage(Context context,
+            String path
+            , String name
+            , Bitmap bm
+            , int quality) throws IOException {
+    
+        if (bm == null
+                || TextUtils.isEmpty(path)
+                || TextUtils.isEmpty(name)
+                )
+            return;
+    
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        file = new File(path, name);
+    
+        FileOutputStream fos = new FileOutputStream(file);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+        byte[] bytes = stream.toByteArray();
+        fos.write(bytes);
+        fos.close();
+        MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                file.getAbsolutePath(), name, null);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/");
+    
+        intent.setData(uri);
+        context.sendBroadcast(intent);//这个广播的目的就是更新图库，发了这个广播进入相册就可以找到你保存的图片了！，记得要传你更新的file哦
+        ToastUtil.showToast(context,"保存成功");
+    ```
+
+30. 模拟屏幕点击事件
+
+    ```java
+    // //模拟触屏点击屏幕事件
+    private void emulatorTouch() {
+        int x = 500; // 屏幕坐标
+        int y = 30;
+        final long downTime = SystemClock.uptimeMillis();
+        final MotionEvent downEvent = MotionEvent.obtain(
+                downTime, downTime, MotionEvent.ACTION_DOWN, x, y, 0);
+        final MotionEvent upEvent = MotionEvent.obtain(
+                downTime, SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, x, y, 0);
+        //添加到webview_loading_round_iv上
+        mWebview.onTouchEvent(downEvent);
+        mWebview.onTouchEvent(upEvent);
+    
+    
+        downEvent.recycle();
+        upEvent.recycle();
+    }
+    ```
