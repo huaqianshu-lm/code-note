@@ -1147,3 +1147,263 @@
         upEvent.recycle();
     }
     ```
+
+31. 网络图片转成 base64
+
+    ```java
+    public static String GetUrlImageToBase64(String url) throws Exception {
+        if (url == null || "".equals(url.trim()))
+            return null;
+    
+        InputStream inputStream = null;
+        URL imgurl = new URL(url);
+        HttpURLConnection conn = (HttpURLConnection) imgurl.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(20000);
+        if (conn.getResponseCode() == 200) {
+            inputStream = conn.getInputStream();
+        }
+        byte[] buffer = new byte[2048];
+        inputStream.read(buffer);
+        inputStream.close();
+        Log.e("LocalInvoiceInputActivi", "base 64 :" + (Base64.encodeToString(buffer, Base64.DEFAULT)));
+    
+        return Base64.encodeToString(buffer, Base64.DEFAULT);
+    }
+    ```
+
+32. 动态设置 textview 的drawable
+
+    ```java
+    Drawable drawable = getResources().getDrawable(R.drawable.close_red);
+    drawable.setBounds(0,0,drawable.getMinimumWidth(),drawable.getMinimumHeight());
+    mResultInfoTv.setCompoundDrawables(drawable,null,null,null);
+    ```
+
+33. 数字在字符串的位置
+
+    ```java
+    int index = 0;
+    for (int i = 0; i < value.length(); i++) {
+        if (value.charAt(i) >= 48 && value.charAt(i) <= 57) {
+            index = i;
+            break;
+        }
+    }
+    ```
+
+34. 获取 SHA1
+
+    ```java
+    进入终端 
+    
+    cd .android 
+    
+    开发版： 
+    
+    keytool -list -v -keystore debug.keystore 
+    
+    不输入密令直接回车 
+    
+    发布版： 
+    
+    keytool -list -v -keystore 签名时使用的 .jks 文件的路径 
+    
+    回车 
+    
+    输入签名时的密令回车 
+    ```
+
+35. 导入多个 jar 包是报资源重复（duplicate）
+
+    ```java
+    // app build.gradle 文件中
+    android
+    
+    {
+        // exclude 后面加上报错文件
+        packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'assets/main_icon_zoomout.png'
+        exclude 'assets/logo_h.png'
+        exclude 'assets/main_topbtn_down.png'
+        exclude 'assets/*.png'
+    }
+    }
+    ```
+
+36. 百度地图导航时引擎初始化失败
+
+    ```
+    官方的 demo 里，在 main 文件夹下有一个 assets 文件夹，里面有一个 .png 文件，把它复制到项目相应的文件夹下。
+    
+    这个 .png 其实不是个 png，而一个 .zip，里面是一些资源文件，如果没有这些资源文件就会出错，但是错误又不明显，看起来都是一些不太相关的错误，而且在官方文档里也并没有说这个问题，搞什么，百度真特么是一大坑，大坑，大坑！！！！！！！！！！！
+    ```
+
+37. 当弹出键盘时页面中的内容跟着向上移动
+
+    ```java
+     在注册 activity 时添加该属性 android:windowSoftInputMode="adjustResize"
+        在布局文件中把要移动的部分用 ScrollView 包起来
+    ```
+
+38. 页面中有 edittext 时，打开时不弹出键盘
+
+    ```java
+     在注册 activity 时添加属性
+        android:windowSoftInputMode="adjustUnspecified|stateHidden"
+    ```
+
+39. 状态栏和导航栏的设置
+
+    ```java
+    // 沉浸式状态栏
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                //5.0以上使用原生方法
+    //            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+    //                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+    //            );
+    
+                // 当 setStatusBarColor 设置为 TRANSPARENT（透明）时，
+                // window.getDecorView().setSystemUiVisibility()
+                // 设置 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN （全屏）时，statusBar 会遮挡布局
+                // 如果setStatusBarColor 设置为其他颜色时，设置全屏属性时也不会遮挡布局
+    //            window.setStatusBarColor(Color.TRANSPARENT);
+    //            window.setStatusBarColor(Color.GRAY);// 顶部状态栏的颜色
+    
+    //            window.setNavigationBarColor(Color.BLUE);
+    //            window.setNavigationBarColor(Color.BLUE); // 底部状态栏的颜色，部分手机会有
+                window.addFlags(
+    //                    WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+    //                            WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION // 底部导航栏透明，设置该属性之后底部导航栏设置什么颜色都不起做用
+    //                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS // 顶端状态栏透明，设置该属性后，导航栏设置其他的颜色都不起作用
+    //                    WindowManager.LayoutParams.FLAG_FULLSCREEN // 全屏，不显示顶部状态栏，显示下面导航栏
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+     
+                );
+    
+                
+                window.getDecorView().setSystemUiVisibility(
+                        // 导航栏上的图标会变暗，有的不可见
+    //                    View.SYSTEM_UI_FLAG_LOW_PROFILE |
+                        // 全屏 上面导航栏不显示
+    //                    View.SYSTEM_UI_FLAG_FULLSCREEN
+                        // 上面会遮挡，下面不遮挡
+    //                  View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    
+                        // 与 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION 一起使用,文档中说如果不设置该值，
+                        // 系统使用其他值时会清除掉View.SYSTEM_UI_FLAG_HIDE_NAVIGATION这个值，但没看到效果
+    //                   View.SYSTEM_UI_FLAG_IMMERSIVE
+    
+                        // 与 View.SYSTEM_UI_FLAG_FULLSCREEN 一起使用时，上面的状态栏不显示，从屏幕顶部向下滑动时
+                        // 状态栏会出现，一段时间后消息
+                        // 与 SYSTEM_UI_FLAG_HIDE_NAVIGATION 一起使用时类似
+                        // 在真机上部分会出现状态栏白色的情况
+    //                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    
+                        // 布局会扩展到全屏，上下导航栏会遮挡布局
+    //                       View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        //自动隐藏下边导航栏，手动调出时，不会遮挡布
+                        // View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+    
+                        // 不全屏，布局在状态栏下面
+                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    
+                        // 状态栏文字显示深色
+    //                     View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    
+                );
+    
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                //4.4-5.0使用三方工具类，有些4.4的手机有问题，这里为演示方便，不使用沉浸式
+    //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    //            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+    //            tintManager.setStatusBarTintEnabled(true);
+    //            tintManager.setStatusBarTintColor(Color.TRANSPARENT);
+            }
+    ```
+
+40. BottomNavigationView 一些相关设置
+
+    ```xml
+     <BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_alignParentBottom="true"
+            app:itemBackground="?android:attr/windowBackground"
+            // 里面图标的布局，以 mene 的形式
+            app:menu="@menu/main_bottom_navigation"
+            // 设置图标的颜色，如果不设置的话，默认取 colorPrimary 的颜色值，只是改变图标的颜色，不会改变图标
+            app:itemIconTint="@drawable/navi_select_color"
+            // 设置文字的颜色，与图标一样
+            app:itemTextColor="@drawable/navi_select_color"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp" />
+            
+    ```
+
+    navi_select_color
+
+    ```xml
+        <?xml version="1.0" encoding="utf-8"?>
+        <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:state_checked="true"
+        android:color="@color/colorPrimaryNew"/>
+        // 这里是 color
+        <item android:state_checked="false" android:color="@color/colorPrimaryNormal"/>
+    
+        </selector>
+    ```
+
+    在 bottomNavigationView 中的设置的图标不会使用 selector 去改变选中时和非选中时的图标，因为它是用 menu 来实现的。 真不知道为什么要用这个来做导航栏。
+
+
+
+    修改选中图标的方法为
+
+    ```java
+    1. bottom_navigation.setItemIconTintList(null);
+    2.
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+                = new BottomNavigationView.OnNavigationItemSelectedListener() {
+            
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            resetToDefaultIcon();// 设置不选中的默认图标
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        //在这里替换图标
+                        item.setIcon(R.mipmap.ic_home_selected);
+                        return true;
+                    ...
+                }
+                return false;
+            }
+            };
+    
+    
+    private void resetToDefaultIcon() {
+            MenuItem mine = bottom_navigation.getMenu().findItem(R.id.navigation_me);
+            mine.setIcon(R.mipmap.mine_normal);
+    
+        }
+    ```
+
+41. AppbarLayout 里面的 Toolbar 去掉阴隐
+
+    ```xml
+    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        // 是 app ，不是 android
+        app:elevation="0dp"
+        >
+    ```
