@@ -1360,12 +1360,9 @@
         </selector>
     ```
 
-    在 bottomNavigationView 中的设置的图标不会使用 selector 去改变选中时和非选中时的图标，因为它是用 menu 来实现的。 真不知道为什么要用这个来做导航栏。
-
-
 
     修改选中图标的方法为
-
+    
     ```java
     1. bottom_navigation.setItemIconTintList(null);
     2.
@@ -1385,8 +1382,9 @@
                 return false;
             }
             };
-    
-    
+
+
+​    
     private void resetToDefaultIcon() {
             MenuItem mine = bottom_navigation.getMenu().findItem(R.id.navigation_me);
             mine.setIcon(R.mipmap.mine_normal);
@@ -1407,3 +1405,91 @@
         app:elevation="0dp"
         >
     ```
+
+42. BottomNavigationView 设置背景为白色后，会遮挡其他的组件，设置 app:elevation="0dp" 可以解决
+
+43. webView 截取整个 view 的内容
+
+    ``` java
+    public Bitmap snapshotView(WebView view){
+       // 获取屏幕密度，用于把 dp 转成 px
+        float density = getResources().getDisplayMetrics().density;
+        // 创建指定宽高的 bitmap 宽为 webview 的宽，高为 html 的高度（需要转换成 px，否则生成的图片不全）
+        Bitmap temBitmap = Bitmap.createBitmap(view.getWidth(), (int) (view.getContentHeight() * density), Bitmap.Config.ARGB_4444);
+       // 这里要记得把 bipmap 绘制出来，不然显示的图片是空白的
+        Canvas canvas = new Canvas(temBitmap);
+        view.draw(canvas);
+        return temBitmap;
+    
+    }
+    
+    //在 setContentView()之前设置该属性
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        WebView.enableSlowWholeDocumentDraw();
+    }
+    
+    
+    ```
+
+44. 截取 webview 的可视部分
+
+    ```java
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public Bitmap snapshotView(WebView view){
+        //设置缓存
+        view.setDrawingCacheEnabled(true);
+        // 如果手动调用了 buildDrawingCache()，而没有调用 setDrawingCacheEnabled(true),之后应该调用 destroyDrawingCache() 清除缓存
+        // 有关在兼容模式下自动缩放的注意事项:当不能自动缩放时，该方法会创建一个与 view 大小相同的 bitmap，因为这个 bitmap 会按照父容器的比例去绘制，屏幕上可能会显示缩放控件
+        // 为了避免这个缩放，应该通过设置为可以自动缩放，这样的话会生成一个与 view 不一样的尺寸的 bitmap，这也意味着你的应用必须能处理这个尺寸
+        // 当硬件加速开启的时候应该避免调用这个方法，如果不需要绘制缓存 bitmap 的话，开启会增加内存的消耗，并且会导致 view 在软件中呈现一次，因此会影响性能
+        view.buildDrawingCache();
+            /*1、从缓存中获取当前屏幕的图片,创建一个DrawingCache的拷贝，因为DrawingCache得到的位图在禁用后会被回收
+             如果直接是控件调用buildDrawingCache
+             *是该控件当前显示在屏幕上的部分就不用减去状态栏的高度了
+             */
+        //
+        view.getDrawingCache().setHeight(view.getHeight());
+        Bitmap temBitmap = Bitmap.createBitmap(view.getDrawingCache(), 0, 0, view.getWidth(), view.getHeight());
+    
+        //禁用DrawingCahce否则会影响性能 ,而且不禁止会导致每次截图到保存的是缓存的位图
+        view.destroyDrawingCache();
+        view.setDrawingCacheEnabled(false);
+        return temBitmap;
+    
+    }
+    
+    ```
+
+45. 获取 webview 中的 html 的宽度
+
+    ```java
+    mWebView.addJavascriptInterface(new JavaScriptInterface(), "HTMLOUT");
+    
+    mWebView.loadUrl(url);
+    mWebView.setWebViewClient(new WebViewClient() {
+        @Override
+        public void onPageFinished(final WebView view, String url) {
+            super.onPageFinished(view, url);
+    
+        // 调用 js 方法  mWebView.loadUrl("javascript:window.HTMLOUT.getContentWidth(document.getElementsByTagName('html')[0].scrollWidth);");
+    
+        }
+    });
+    
+    
+    class JavaScriptInterface {
+        int webviewContentWidth;
+    
+        @JavascriptInterface
+        public void getContentWidth(String value) {
+            if (value != null) {
+                // 获取到html 的宽度值
+                webviewContentWidth = Integer.parseInt(value);
+                Log.e("MainActivity", "Result from javascript: " + webviewContentWidth);
+            }
+        }
+    }
+    
+    
+    ```
+
