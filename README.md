@@ -1360,9 +1360,8 @@
         </selector>
     ```
 
-
     修改选中图标的方法为
-    
+
     ```java
     1. bottom_navigation.setItemIconTintList(null);
     2.
@@ -1381,16 +1380,17 @@
                 }
                 return false;
             }
-            };
+            
+    ```
 
-
-​    
+    ```java
     private void resetToDefaultIcon() {
             MenuItem mine = bottom_navigation.getMenu().findItem(R.id.navigation_me);
             mine.setIcon(R.mipmap.mine_normal);
     
         }
     ```
+
 
 41. AppbarLayout 里面的 Toolbar 去掉阴隐
 
