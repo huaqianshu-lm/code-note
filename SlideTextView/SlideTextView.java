@@ -24,7 +24,7 @@ public class SlideTextView extends TextSwitcher {
 
     private int index = 0;//textview上下滚动下标
     private Handler handler = new Handler();
-    private boolean isFlipping = false; // 是否启用预警信息轮播
+    private boolean isFlipping = false; // 是否启用轮播
     private List<String> textList = new ArrayList<>();
     private int inAnimId = R.anim.slide_in_bottom;
     private int outAnimId = R.anim.slide_out_top;
@@ -59,20 +59,19 @@ public class SlideTextView extends TextSwitcher {
     public SlideTextView(Context context) {
         super(context);
         mContext = context;
-//        setTextSwitcher();
     }
 
     public SlideTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-//        setTextSwitcher();
     }
 
 
 
 
-    //开启信息轮播
+    //开启轮播
     public SlideTextView startFlipping() {
+    	// 当只有数据只有一条时，不轮播
         if (textList.size() == 1) {
             setText(textList.get(0));
             index = 0;
@@ -86,7 +85,7 @@ public class SlideTextView extends TextSwitcher {
         return this;
     }
 
-    //关闭信息轮播
+    //关闭轮播
     public SlideTextView stopFlipping() {
         if (textList.size() > 1) {
             isFlipping = false;
@@ -107,14 +106,13 @@ public class SlideTextView extends TextSwitcher {
             @Override
             public View makeView() {
                 TextView textView = new TextView(mContext);
-                textView.setTextSize(textSize);//字号
+                textView.setTextSize(textSize);
                 textView.setTextColor(textColor);
                 textView.setEllipsize(ellipsize);
                 textView.setSingleLine();
                 textView.setGravity(gravity);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                params.gravity = Gravity.CENTER;
                 textView.setLayoutParams(params);
                 textView.setPadding(textPaddingLeft, textPaddingTop, textPaddingRight, textPaddingBottom);
                 return textView;
@@ -123,6 +121,7 @@ public class SlideTextView extends TextSwitcher {
        return this;
     }
 
+/*********设置 textview 的一些属性************************************************************************************/
 
     public List<String> getTextList() {
         return textList;

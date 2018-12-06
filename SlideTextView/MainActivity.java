@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         mWarningTextList.add("333333333333333333");
         mWarningTextList.add("44444444444444444444444444");
         mWarningTextList.add("555555555555555555555555555555555555555555555555555555555555555555555");
-//
 
         mSlideTextView.setTextList(mWarningTextList)
                 .setTextColor(Color.RED)
@@ -42,14 +41,10 @@ public class MainActivity extends AppCompatActivity {
                 .setEllipsize(TextUtils.TruncateAt.START)
                 .setInAnimId(R.anim.slide_in_right)
                 .setOutAnimId(R.anim.slide_out_left)
+                // 这两个最后设置，顺序也按照这样的来，先 add 后 start
                 .addTextSwitcher()
                 .startFlipping();
     }
-
-
-
-
-
 
 
     @Override
